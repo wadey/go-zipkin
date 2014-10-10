@@ -1,7 +1,6 @@
 package zipkin
 
 import (
-	"bytes"
 	"encoding/base64"
 	"log"
 	"net"
@@ -19,11 +18,10 @@ const (
 
 type ScribeCollector struct {
 	addr     string
-	category string
 	spanChan chan *zipkin.Span
 }
 
-func NewScribeCollector(addr string, category string) *ScribeCollector {
+func NewScribeCollector(addr string) *ScribeCollector {
 	c := &ScribeCollector{
 		addr:     addr,
 		spanChan: make(chan *zipkin.Span, buffer),
@@ -83,7 +81,7 @@ func (c *ScribeCollector) HandleConnection() {
 			message := base64.StdEncoding.EncodeToString(b)
 
 			logEntry := &scribe.LogEntry{
-				Category: c.category,
+				Category: "zipkin",
 				Message:  message,
 			}
 
@@ -97,12 +95,11 @@ func (c *ScribeCollector) HandleConnection() {
 }
 
 func spanToBytes(span *zipkin.Span) ([]byte, error) {
-	b := bytes.NewBuffer([]byte{})
 	t := thrift.NewTMemoryBuffer()
 	p := thrift.NewTBinaryProtocolTransport(t)
 	err := span.Write(p)
 	if err != nil {
 		return nil, err
 	}
-	return b.Bytes(), nil
+	return t.Buffer.Bytes(), nil
 }
