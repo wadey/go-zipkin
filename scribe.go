@@ -18,11 +18,10 @@ const (
 
 type ScribeCollector struct {
 	addr     string
-	category string
 	spanChan chan *zipkin.Span
 }
 
-func NewScribeCollector(addr string, category string) *ScribeCollector {
+func NewScribeCollector(addr string) *ScribeCollector {
 	c := &ScribeCollector{
 		addr:     addr,
 		category: category,
@@ -83,7 +82,7 @@ func (c *ScribeCollector) HandleConnection() {
 			message := base64.StdEncoding.EncodeToString(b)
 
 			logEntry := &scribe.LogEntry{
-				Category: c.category,
+				Category: "zipkin",
 				Message:  message,
 			}
 
