@@ -25,6 +25,7 @@ type ScribeCollector struct {
 func NewScribeCollector(addr string, category string) *ScribeCollector {
 	c := &ScribeCollector{
 		addr:     addr,
+		category: category,
 		spanChan: make(chan *zipkin.Span, buffer),
 	}
 	go c.HandleConnection()
