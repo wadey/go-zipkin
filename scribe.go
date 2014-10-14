@@ -1,7 +1,6 @@
 package zipkin
 
 import (
-	"bytes"
 	"encoding/base64"
 	"log"
 	"net"
@@ -97,12 +96,11 @@ func (c *ScribeCollector) HandleConnection() {
 }
 
 func spanToBytes(span *zipkin.Span) ([]byte, error) {
-	b := bytes.NewBuffer([]byte{})
 	t := thrift.NewTMemoryBuffer()
 	p := thrift.NewTBinaryProtocolTransport(t)
 	err := span.Write(p)
 	if err != nil {
 		return nil, err
 	}
-	return b.Bytes(), nil
+	return t.Buffer.Bytes(), nil
 }
