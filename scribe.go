@@ -22,14 +22,18 @@ type ScribeCollector struct {
 	spanChan chan *zipkin.Span
 }
 
-func NewScribeCollector(addr string, category string) *ScribeCollector {
+func NewScribeCollector(addr string) *ScribeCollector {
 	c := &ScribeCollector{
 		addr:     addr,
-		category: category,
+		category: "zipkin",
 		spanChan: make(chan *zipkin.Span, buffer),
 	}
 	go c.HandleConnection()
 	return c
+}
+
+func (c *ScribeCollector) SetCategory(category string) {
+	c.category = category
 }
 
 func (c *ScribeCollector) Collect(span *zipkin.Span) {
