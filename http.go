@@ -33,7 +33,7 @@ type Options struct {
 }
 
 func Handler(next http.Handler, options *Options) http.Handler {
-	if !options.Enabled {
+	if options == nil || !options.Enabled {
 		return next
 	}
 	options.ipNum = ipv4ToNumber(options.IP)
