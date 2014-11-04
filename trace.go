@@ -55,8 +55,17 @@ func (t *Trace) RecordBinary(annotation *zipkin.BinaryAnnotation) {
 }
 
 func (t *Trace) Submit() {
+	clone := &zipkin.Span{
+		TraceId:           t.span.TraceId,
+		Name:              t.span.Name,
+		Id:                t.span.Id,
+		ParentId:          t.span.ParentId,
+		Annotations:       t.span.Annotations,
+		BinaryAnnotations: t.span.BinaryAnnotations,
+		Debug:             t.span.Debug,
+	}
 	for _, c := range t.Collectors {
-		c.Collect(t.span)
+		c.Collect(clone)
 	}
 	t.span.Annotations = nil
 	t.span.BinaryAnnotations = nil
