@@ -99,10 +99,15 @@ func NewTimestampAnnotation(value string, t time.Time, d time.Duration) *zipkin.
 	if t.IsZero() {
 		t = time.Now()
 	}
+	var duration *int32
+	if d != 0 {
+		duration = thrift.Int32Ptr(int32(d / time.Microsecond))
+	}
+
 	return &zipkin.Annotation{
 		Timestamp: t.UnixNano() / 1e3,
 		Value:     value,
-		Duration:  thrift.Int32Ptr(int32(d / time.Microsecond)),
+		Duration:  duration,
 	}
 }
 
