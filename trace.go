@@ -34,6 +34,14 @@ func (t *Trace) Child(name string) *Trace {
 	}
 }
 
+func (t *Trace) SetServiceName(serviceName string) {
+	t.Endpoint = &zipkin.Endpoint{
+		Ipv4:        t.Endpoint.Ipv4,
+		Port:        t.Endpoint.Port,
+		ServiceName: serviceName,
+	}
+}
+
 func (t *Trace) Record(annotation *zipkin.Annotation) {
 	// TODO mutex?
 	if annotation.Host == nil {
