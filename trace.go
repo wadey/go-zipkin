@@ -182,5 +182,7 @@ func maybeReadID(s string) *ID {
 
 // TODO use a 64-bit RNG like xorshift or make it customizable?
 func randomID() int64 {
-	return rand.Int63()
+	// Mask off to 2^53 because lol javascript
+	// https://github.com/twitter/zipkin/issues/199
+	return rand.Int63() & 0x001fffffffffffff
 }
