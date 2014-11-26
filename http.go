@@ -54,7 +54,7 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		setCurrentTrace(r, trace)
 		defer delCurrentTrace(r)
 		trace.Record(ServerRecvAnnotation(time.Now()))
-		trace.RecordBinary(NewStringAnnotation("http.uri", r.URL.String()))
+		trace.RecordBinary(NewStringAnnotation("http.uri", r.URL.RequestURI()))
 		w = &zipkinResponseWriter{trace: trace, writer: w}
 	}
 	h.next.ServeHTTP(w, r)
