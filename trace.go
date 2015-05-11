@@ -89,27 +89,56 @@ func (t *Trace) HTTPHeader() http.Header {
 	return h
 }
 
-func NewTraceForHTTPHeader(traceName string, h http.Header, collectors []SpanCollector) *Trace {
+func (t *Trace) TraceID() ID {
+	return ID(t.span.TraceId)
+}
+func (t *Trace) SpanID() ID {
+	return ID(t.span.Id)
+}
+func (t *Trace) ParentSpanID() *ID {
+	if t.span.IsSetParentId() {
+		id := ID(*t.span.ParentId)
+		return &id
+	}
+	return nil
+}
+
+func NewTrace(traceName string, collectors []SpanCollector) *Trace {
+	return NewTraceForIDs(traceName, randomID(), randomID(), nil, collectors)
+}
+
+func NewTraceForIDs(traceName string, traceID, spanID int64, parentSpanID *int64, collectors []SpanCollector) *Trace {
 	span := &zipkin.Span{
-		Name: traceName,
-	}
-	if s := maybeReadID(h.Get("X-B3-TraceId")); s != nil {
-		span.TraceId = int64(*s)
-	} else {
-		span.TraceId = randomID()
-	}
-	if s := maybeReadID(h.Get("X-B3-SpanId")); s != nil {
-		span.Id = int64(*s)
-	} else {
-		span.Id = randomID()
-	}
-	if s := maybeReadID(h.Get("X-B3-ParentSpanId")); s != nil {
-		span.ParentId = thrift.Int64Ptr(int64(*s))
+		Name:     traceName,
+		TraceId:  traceID,
+		Id:       spanID,
+		ParentId: parentSpanID,
 	}
 	return &Trace{
 		Collectors: collectors,
 		span:       span,
 	}
+}
+
+func NewTraceForHTTPHeader(traceName string, h http.Header, collectors []SpanCollector) *Trace {
+	var traceID, spanID int64
+	var parentSpanID *int64
+
+	if s := maybeReadID(h.Get("X-B3-TraceId")); s != nil {
+		traceID = int64(*s)
+	} else {
+		traceID = randomID()
+	}
+	if s := maybeReadID(h.Get("X-B3-SpanId")); s != nil {
+		spanID = int64(*s)
+	} else {
+		spanID = randomID()
+	}
+	if s := maybeReadID(h.Get("X-B3-ParentSpanId")); s != nil {
+		parentSpanID = thrift.Int64Ptr(int64(*s))
+	}
+
+	return NewTraceForIDs(traceName, traceID, spanID, parentSpanID, collectors)
 }
 
 func NewTimestampAnnotation(value string, t time.Time, d time.Duration) *zipkin.Annotation {
