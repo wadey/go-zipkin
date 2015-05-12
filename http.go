@@ -109,3 +109,11 @@ func ipv4ToNumber(ip net.IP) (sum int32) {
 	}
 	return
 }
+
+func (o *Options) Endpoint() *zipkin.Endpoint {
+	return &zipkin.Endpoint{
+		Ipv4:        o.ipNum,
+		Port:        o.Port,
+		ServiceName: o.ServiceName,
+	}
+}
