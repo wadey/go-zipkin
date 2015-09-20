@@ -231,7 +231,6 @@ type Annotation struct {
 	Timestamp int64     `thrift:"timestamp,1" json:"timestamp"`
 	Value     string    `thrift:"value,2" json:"value"`
 	Host      *Endpoint `thrift:"host,3" json:"host"`
-	Duration  *int32    `thrift:"duration,4" json:"duration"`
 }
 
 func NewAnnotation() *Annotation {
@@ -254,21 +253,8 @@ func (p *Annotation) GetHost() *Endpoint {
 	}
 	return p.Host
 }
-
-var Annotation_Duration_DEFAULT int32
-
-func (p *Annotation) GetDuration() int32 {
-	if !p.IsSetDuration() {
-		return Annotation_Duration_DEFAULT
-	}
-	return *p.Duration
-}
 func (p *Annotation) IsSetHost() bool {
 	return p.Host != nil
-}
-
-func (p *Annotation) IsSetDuration() bool {
-	return p.Duration != nil
 }
 
 func (p *Annotation) Read(iprot thrift.TProtocol) error {
@@ -294,10 +280,6 @@ func (p *Annotation) Read(iprot thrift.TProtocol) error {
 			}
 		case 3:
 			if err := p.ReadField3(iprot); err != nil {
-				return err
-			}
-		case 4:
-			if err := p.ReadField4(iprot); err != nil {
 				return err
 			}
 		default:
@@ -341,15 +323,6 @@ func (p *Annotation) ReadField3(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *Annotation) ReadField4(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadI32(); err != nil {
-		return fmt.Errorf("error reading field 4: %s", err)
-	} else {
-		p.Duration = &v
-	}
-	return nil
-}
-
 func (p *Annotation) Write(oprot thrift.TProtocol) error {
 	if err := oprot.WriteStructBegin("Annotation"); err != nil {
 		return fmt.Errorf("%T write struct begin error: %s", p, err)
@@ -361,9 +334,6 @@ func (p *Annotation) Write(oprot thrift.TProtocol) error {
 		return err
 	}
 	if err := p.writeField3(oprot); err != nil {
-		return err
-	}
-	if err := p.writeField4(oprot); err != nil {
 		return err
 	}
 	if err := oprot.WriteFieldStop(); err != nil {
@@ -411,21 +381,6 @@ func (p *Annotation) writeField3(oprot thrift.TProtocol) (err error) {
 		}
 		if err := oprot.WriteFieldEnd(); err != nil {
 			return fmt.Errorf("%T write field end error 3:host: %s", p, err)
-		}
-	}
-	return err
-}
-
-func (p *Annotation) writeField4(oprot thrift.TProtocol) (err error) {
-	if p.IsSetDuration() {
-		if err := oprot.WriteFieldBegin("duration", thrift.I32, 4); err != nil {
-			return fmt.Errorf("%T write field begin error 4:duration: %s", p, err)
-		}
-		if err := oprot.WriteI32(int32(*p.Duration)); err != nil {
-			return fmt.Errorf("%T.duration (4) field write error: %s", p, err)
-		}
-		if err := oprot.WriteFieldEnd(); err != nil {
-			return fmt.Errorf("%T write field end error 4:duration: %s", p, err)
 		}
 	}
 	return err

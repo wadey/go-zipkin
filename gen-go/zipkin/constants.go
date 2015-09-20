@@ -19,6 +19,10 @@ const CLIENT_SEND = "cs"
 const CLIENT_RECV = "cr"
 const SERVER_SEND = "ss"
 const SERVER_RECV = "sr"
+const WIRE_SEND = "ws"
+const WIRE_RECV = "wr"
+const CLIENT_ADDR = "ca"
+const SERVER_ADDR = "sa"
 
 func init() {
 }
