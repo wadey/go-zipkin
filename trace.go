@@ -148,7 +148,7 @@ func NewTimestampAnnotation(value string, t time.Time) *zipkin.Annotation {
 
 	return &zipkin.Annotation{
 		Timestamp: t.UnixNano() / 1e3,
-		Value:     value
+		Value:     value,
 	}
 }
 
