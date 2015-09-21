@@ -141,36 +141,31 @@ func NewTraceForHTTPHeader(traceName string, h http.Header, collectors []SpanCol
 	return NewTraceForIDs(traceName, traceID, spanID, parentSpanID, collectors)
 }
 
-func NewTimestampAnnotation(value string, t time.Time, d time.Duration) *zipkin.Annotation {
+func NewTimestampAnnotation(value string, t time.Time) *zipkin.Annotation {
 	if t.IsZero() {
 		t = time.Now()
-	}
-	var duration *int32
-	if d != 0 {
-		duration = thrift.Int32Ptr(int32(d / time.Microsecond))
 	}
 
 	return &zipkin.Annotation{
 		Timestamp: t.UnixNano() / 1e3,
-		Value:     value,
-		Duration:  duration,
+		Value:     value
 	}
 }
 
 func ClientSendAnnotation(t time.Time) *zipkin.Annotation {
-	return NewTimestampAnnotation(zipkin.CLIENT_SEND, t, 0)
+	return NewTimestampAnnotation(zipkin.CLIENT_SEND, t)
 }
 
 func ClientRecvAnnotation(t time.Time) *zipkin.Annotation {
-	return NewTimestampAnnotation(zipkin.CLIENT_RECV, t, 0)
+	return NewTimestampAnnotation(zipkin.CLIENT_RECV, t)
 }
 
 func ServerSendAnnotation(t time.Time) *zipkin.Annotation {
-	return NewTimestampAnnotation(zipkin.SERVER_SEND, t, 0)
+	return NewTimestampAnnotation(zipkin.SERVER_SEND, t)
 }
 
 func ServerRecvAnnotation(t time.Time) *zipkin.Annotation {
-	return NewTimestampAnnotation(zipkin.SERVER_RECV, t, 0)
+	return NewTimestampAnnotation(zipkin.SERVER_RECV, t)
 }
 
 func NewStringAnnotation(key string, value string) *zipkin.BinaryAnnotation {
