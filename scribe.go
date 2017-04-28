@@ -6,7 +6,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/apache/thrift/lib/go/thrift"
+	"git.apache.org/thrift.git/lib/go/thrift"
 	"github.com/wadey/go-zipkin/gen-go/scribe"
 	"github.com/wadey/go-zipkin/gen-go/zipkin"
 )
