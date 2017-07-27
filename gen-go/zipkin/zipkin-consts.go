@@ -5,14 +5,17 @@ package zipkin
 
 import (
 	"bytes"
+	"reflect"
+	"context"
 	"fmt"
-
 	"git.apache.org/thrift.git/lib/go/thrift"
 )
 
 // (needed to ensure safety because of naive import list construction.)
 var _ = thrift.ZERO
 var _ = fmt.Printf
+var _ = context.Background
+var _ = reflect.DeepEqual
 var _ = bytes.Equal
 
 const CLIENT_SEND = "cs"
@@ -26,3 +29,4 @@ const SERVER_ADDR = "sa"
 
 func init() {
 }
+

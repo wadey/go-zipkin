@@ -1,6 +1,7 @@
 package zipkin
 
 import (
+	"context"
 	"encoding/base64"
 	"log"
 	"net"
@@ -91,7 +92,7 @@ func (c *ScribeCollector) HandleConnection() {
 				Message:  message,
 			}
 
-			_, err = scribeClient.Log([]*scribe.LogEntry{logEntry})
+			_, err = scribeClient.Log(context.TODO(), []*scribe.LogEntry{logEntry})
 			if err != nil {
 				log.Printf("zipkin: failed to send span to %v: %v", c.addr, err)
 				scribeClient = nil

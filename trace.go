@@ -26,10 +26,10 @@ func (t *Trace) Child(name string) *Trace {
 		Endpoint:   t.Endpoint,
 		Collectors: t.Collectors,
 		span: &zipkin.Span{
-			TraceId:  t.span.TraceId,
+			TraceID:  t.span.TraceID,
 			Name:     name,
-			ParentId: thrift.Int64Ptr(t.span.Id),
-			Id:       randomID(),
+			ParentID: thrift.Int64Ptr(t.span.ID),
+			ID:       randomID(),
 		},
 	}
 }
@@ -64,10 +64,10 @@ func (t *Trace) RecordBinary(annotation *zipkin.BinaryAnnotation) {
 
 func (t *Trace) Submit() {
 	clone := &zipkin.Span{
-		TraceId:           t.span.TraceId,
+		TraceID:           t.span.TraceID,
 		Name:              t.span.Name,
-		Id:                t.span.Id,
-		ParentId:          t.span.ParentId,
+		ID:                t.span.ID,
+		ParentID:          t.span.ParentID,
 		Annotations:       t.span.Annotations,
 		BinaryAnnotations: t.span.BinaryAnnotations,
 		Debug:             t.span.Debug,
@@ -81,23 +81,23 @@ func (t *Trace) Submit() {
 
 func (t *Trace) HTTPHeader() http.Header {
 	h := http.Header{}
-	h.Set("X-B3-TraceId", ID(t.span.TraceId).String())
-	h.Set("X-B3-SpanId", ID(t.span.Id).String())
-	if t.span.IsSetParentId() {
-		h.Set("X-B3-ParentSpanId", ID(t.span.GetParentId()).String())
+	h.Set("X-B3-TraceId", ID(t.span.TraceID).String())
+	h.Set("X-B3-SpanId", ID(t.span.ID).String())
+	if t.span.IsSetParentID() {
+		h.Set("X-B3-ParentSpanId", ID(t.span.GetParentID()).String())
 	}
 	return h
 }
 
 func (t *Trace) TraceID() ID {
-	return ID(t.span.TraceId)
+	return ID(t.span.TraceID)
 }
 func (t *Trace) SpanID() ID {
-	return ID(t.span.Id)
+	return ID(t.span.ID)
 }
 func (t *Trace) ParentSpanID() *ID {
-	if t.span.IsSetParentId() {
-		id := ID(*t.span.ParentId)
+	if t.span.IsSetParentID() {
+		id := ID(*t.span.ParentID)
 		return &id
 	}
 	return nil
@@ -110,9 +110,9 @@ func NewTrace(traceName string, collectors []SpanCollector) *Trace {
 func NewTraceForIDs(traceName string, traceID, spanID int64, parentSpanID *int64, collectors []SpanCollector) *Trace {
 	span := &zipkin.Span{
 		Name:     traceName,
-		TraceId:  traceID,
-		Id:       spanID,
-		ParentId: parentSpanID,
+		TraceID:  traceID,
+		ID:       spanID,
+		ParentID: parentSpanID,
 	}
 	return &Trace{
 		Collectors: collectors,
@@ -184,7 +184,7 @@ type DebugCollector struct{}
 
 func (*DebugCollector) Collect(span *zipkin.Span) {
 	log.Printf("[%s %s %s %s] %s %s",
-		ID(span.TraceId), (*ID)(span.ParentId), ID(span.Id), span.Name,
+		ID(span.TraceID), (*ID)(span.ParentID), ID(span.ID), span.Name,
 		span.Annotations, span.BinaryAnnotations)
 }
 
