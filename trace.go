@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"time"
 
-	"git.apache.org/thrift.git/lib/go/thrift"
+	"github.com/betable/go-thrift/thrift"
 	"github.com/wadey/go-zipkin/gen-go/zipkin"
 )
 

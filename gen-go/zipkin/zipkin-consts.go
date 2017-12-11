@@ -5,10 +5,11 @@ package zipkin
 
 import (
 	"bytes"
-	"reflect"
 	"context"
 	"fmt"
-	"git.apache.org/thrift.git/lib/go/thrift"
+	"reflect"
+
+	"github.com/betable/go-thrift/thrift"
 )
 
 // (needed to ensure safety because of naive import list construction.)
