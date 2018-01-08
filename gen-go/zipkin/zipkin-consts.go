@@ -5,10 +5,9 @@ package zipkin
 
 import (
 	"bytes"
+	"reflect"
 	"context"
 	"fmt"
-	"reflect"
-
 	"github.com/betable/go-thrift/thrift"
 )
 

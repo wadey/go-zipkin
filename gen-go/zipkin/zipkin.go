@@ -5,12 +5,11 @@ package zipkin
 
 import (
 	"bytes"
-	"context"
+	"reflect"
 	"database/sql/driver"
 	"errors"
+	"context"
 	"fmt"
-	"reflect"
-
 	"github.com/betable/go-thrift/thrift"
 )
 
